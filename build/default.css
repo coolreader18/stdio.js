@@ -1,0 +1,13 @@
+.io-checkbox-wrapper label,
+.io-radio-wrapper label,
+.io-output {
+  display: block;
+}
+
+.io-input {
+  margin-left: 5px;
+}
+
+.io-file-display {
+  margin-left: 4px;
+}
