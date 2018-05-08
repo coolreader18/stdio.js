@@ -13,7 +13,7 @@ could be contained in a single HTML file:
 <head>
   <link rel=stylesheet href=https://cdn.jsdeliver.net/npm/primer@10.4.0/build/build.css>
   <title>stdio App</title>
-  <script src="https://cdn.jsdelivr.net/npm/easy-io/build/easy-io-primer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stdio.js/build/stdio-primer.min.js"></script>
   <script>
   stdio.title("My Cool Thing").add(
     {
