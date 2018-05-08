@@ -1,7 +1,7 @@
 import jsx from "./jsx-factory";
 
-/* @legume
- * @style ./build/default.css
+/* @legume @preserve
+ * @style ./default.css
  */
 
 export default elem =>
