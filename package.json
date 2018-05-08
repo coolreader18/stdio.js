@@ -1,0 +1,25 @@
+{
+  "name": "easy-io",
+  "version": "0.1.0",
+  "description": "A simple framework to create simple input/output functions.",
+  "main": "src/index.js",
+  "jsdelivr": "build/easy-io.min.js",
+  "repository": "https://github.com/coolreader18/easy-io",
+  "author": "coolreader18",
+  "scripts": {
+    "build": "npx rollup -c",
+    "test": "npx serve test",
+    "watch": "npx rollup -cw"
+  },
+  "devDependencies": {
+    "rollup": "^0.58.1",
+    "serve": "^6.5.5",
+    "rollup-plugin-jsx": "^1.0.3",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-uglify": "^3.0.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "when-dom-ready": "^1.2.12"
+  }
+}
