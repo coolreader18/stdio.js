@@ -21,11 +21,11 @@ export default themes.reduce((arr, cur) => {
   const cfg = {
     input: "src/index.js",
     output: {
-      name: "easyIO",
+      name: "stdio",
       format: "umd",
-      file: `build/easy-io-${cur}.js`,
+      file: `build/stdio-${cur}.js`,
       intro: `/* @legume @preserve
- * @name easyIO
+ * @name stdio
  * @author coolreader18
  */`
     },
@@ -41,7 +41,7 @@ export default themes.reduce((arr, cur) => {
       ...cfg,
       output: {
         ...cfg.output,
-        file: `build/easy-io-${cur}.min.js`
+        file: `build/stdio-${cur}.min.js`
       },
       plugins: [
         ...cfg.plugins,

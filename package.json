@@ -1,10 +1,10 @@
 {
-  "name": "easy-io",
+  "name": "stdio.js",
   "version": "0.1.0",
   "description": "A simple framework to create simple input/output functions.",
   "main": "src/index.js",
-  "jsdelivr": "build/easy-io.min.js",
-  "repository": "https://github.com/coolreader18/easy-io",
+  "jsdelivr": "build/stdio.min.js",
+  "repository": "https://github.com/coolreader18/stdio.js",
   "author": "coolreader18",
   "scripts": {
     "build": "npx rollup -c",
