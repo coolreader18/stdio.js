@@ -1,6 +1,6 @@
 import jsx from "./jsx-factory";
 
-/* @legume
+/* @legume @preserve
  * @style https://cdn.jsdeliver.net/npm/primer@10.4.0/build/build.css
  */
 

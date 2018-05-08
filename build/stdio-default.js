@@ -59,8 +59,8 @@
     return output;
   }
 
-  /* @legume
-   * @style ./build/default.css
+  /* @legume @preserve
+   * @style ./default.css
    */
 
   var theme = elem =>
@@ -189,6 +189,7 @@
   		});
   	};
   };
+  //# sourceMappingURL=index.es2015.js.map
 
   let transformElem = theme;
 
