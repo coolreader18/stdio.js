@@ -1,12 +1,12 @@
 /* @legume
  * @name test
- * @require ./build/easy-io-default.js as easyIO
+ * @require ./build/stdio-primer.js as stdio
  */
 
 // So that there's no jittering when changing the text and awaiting createImageBitmap
 let oldFile, bitmap;
 
-easyIO.title("easyIO").add(
+stdio.title("stdio.js").add(
   { type: "heading", size: 1, text: "test" },
   {
     type: "textInput",

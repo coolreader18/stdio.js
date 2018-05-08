@@ -189,10 +189,10 @@ DOMready().then(() => {
   if (i in themeObj) themeObj[i](root);
 });
 
-const easyIO = {
+const stdio = {
   /**
-   * Add easyIO elements to the document
-   * @param {...easyIO.Element} elems
+   * Add stdio elements to the document
+   * @param {...stdio.Element} elems
    */
   add(...elems) {
     elems.forEach(cur => dom.push(cur));
@@ -219,4 +219,4 @@ const easyIO = {
   }
 };
 
-export default easyIO;
+export default stdio;
