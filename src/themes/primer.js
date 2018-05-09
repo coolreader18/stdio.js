@@ -1,9 +1,5 @@
 import jsx from "./jsx-factory";
 
-/* @legume @preserve
- * @style https://cdn.jsdeliver.net/npm/primer@10.4.0/build/build.css
- */
-
 export default elem =>
   ({
     title: () => (
@@ -120,7 +116,18 @@ export default elem =>
       fileDragTo: ".form-control",
       fileDisplay: "span",
       fileButton: "button"
+    }),
+    button: () => ({
+      elem: (
+        <div class="m-2">
+          <button class="btn">{elem.label || elem.name}</button>
+        </div>
+      ),
+      evt: "button"
     })
   }[elem.type]());
 
 export const root = <div class="Box p-5 m-4" />;
+
+export const styleUrl =
+  "https://cdn.jsdelivr.net/npm/primer@10.4.0/build/build.css";
