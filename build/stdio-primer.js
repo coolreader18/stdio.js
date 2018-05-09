@@ -59,11 +59,7 @@
     return output;
   }
 
-  /* @legume @preserve
-   * @style https://cdn.jsdeliver.net/npm/primer@10.4.0/build/build.css
-   */
-
-  var theme = elem =>
+  var _transformElem = elem =>
     ({
       title: () => (
         jsx('div', {class: "Subhead"},
@@ -179,14 +175,26 @@
         fileDragTo: ".form-control",
         fileDisplay: "span",
         fileButton: "button"
+      }),
+      button: () => ({
+        elem: (
+          jsx('div', {class: "m-2"},
+            jsx('button', {class: "btn"}, elem.label || elem.name)
+          )
+        ),
+        evt: "button"
       })
     }[elem.type]());
 
   const root$1 = jsx('div', {class: "Box p-5 m-4"});
 
-  var themeObj = /*#__PURE__*/Object.freeze({
-    default: theme,
-    root: root$1
+  const styleUrl =
+    "https://cdn.jsdelivr.net/npm/primer@10.4.0/build/build.css";
+
+  var _themeObj = /*#__PURE__*/Object.freeze({
+    default: _transformElem,
+    root: root$1,
+    styleUrl: styleUrl
   });
 
   /* eslint no-void: "off" */
@@ -231,7 +239,8 @@
   };
   //# sourceMappingURL=index.es2015.js.map
 
-  let transformElem = theme;
+  let themeObj = _themeObj;
+  let transformElem = _transformElem;
 
   /**
    * Get an array of functions to reduce on
@@ -314,11 +323,7 @@
           canvas: () => {
             let { interval } = userElem;
             const updateCanvas = () =>
-              userElem.process(
-                evtElem[0].getContext("2d"),
-                this.scope,
-                evtElem[0]
-              );
+              userElem.draw(evtElem[0].getContext("2d"), this.scope, evtElem[0]);
             const obj = {
               updateCanvas,
               onUpdate: true
@@ -377,6 +382,11 @@
               fileDisplay.innerText = file.name;
               scope[userElem.name] = funcReduce(funcs, file.slice());
             }
+          },
+          button: () => {
+            evtElem[0].addEventListener("click", () =>
+              userElem.handler(dom.scope)
+            );
           }
         };
         if (userElem.type in handle) handle[userElem.type]();
@@ -442,11 +452,23 @@
     }),
     /**
      * Set a custom element output for the elements
-     * @param {Function} func
+     * @param {Function} stl
      */
-    style(func) {
-      if (typeof func === "function") transformElem = func;
-      else throw new Error();
+    style(stl) {
+      if (typeof stl === "function") transformElem = stl;
+      else if (typeof stl === "object") {
+        themeObj = stl;
+        transformElem = stl.transformElem;
+      } else throw new Error();
+    },
+    loadStyleSheet() {
+      let style = "styleUrl";
+      if (!(style in themeObj)) return;
+      style = [].concat(themeObj[style]);
+      style.forEach(cur =>
+        document.head.appendChild(jsx('link', {rel: "stylesheet", href: cur}))
+      );
+      return this;
     }
   };
 

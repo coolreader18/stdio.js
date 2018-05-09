@@ -1,6 +1,8 @@
-import theme, * as themeObj from "./themes/default";
+import _transformElem, * as _themeObj from "./themes/default";
 import DOMready from "when-dom-ready";
-let transformElem = theme;
+import jsx from "./themes/jsx-factory";
+let themeObj = _themeObj;
+let transformElem = _transformElem;
 
 /**
  * Get an array of functions to reduce on
@@ -83,11 +85,7 @@ const dom = Object.assign([], {
         canvas: () => {
           let { interval } = userElem;
           const updateCanvas = () =>
-            userElem.process(
-              evtElem[0].getContext("2d"),
-              this.scope,
-              evtElem[0]
-            );
+            userElem.draw(evtElem[0].getContext("2d"), this.scope, evtElem[0]);
           const obj = {
             updateCanvas,
             onUpdate: true
@@ -146,6 +144,11 @@ const dom = Object.assign([], {
             fileDisplay.innerText = file.name;
             scope[userElem.name] = funcReduce(funcs, file.slice());
           }
+        },
+        button: () => {
+          evtElem[0].addEventListener("click", () =>
+            userElem.handler(dom.scope)
+          );
         }
       };
       if (userElem.type in handle) handle[userElem.type]();
@@ -211,11 +214,23 @@ const stdio = {
   }),
   /**
    * Set a custom element output for the elements
-   * @param {Function} func
+   * @param {Function} stl
    */
-  style(func) {
-    if (typeof func === "function") transformElem = func;
-    else throw new Error();
+  style(stl) {
+    if (typeof stl === "function") transformElem = stl;
+    else if (typeof stl === "object") {
+      themeObj = stl;
+      transformElem = stl.transformElem;
+    } else throw new Error();
+  },
+  loadStyleSheet() {
+    let style = "styleUrl";
+    if (!(style in themeObj)) return;
+    style = [].concat(themeObj[style]);
+    style.forEach(cur =>
+      document.head.appendChild(<link rel="stylesheet" href={cur} />)
+    );
+    return this;
   }
 };
 

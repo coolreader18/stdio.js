@@ -9,14 +9,14 @@
    * @author coolreader18
    */
 
-  var theme = () => {
+  var _transformElem = () => {
     throw new Error(
       "stdio none theme is in use and a theme hasn't been registered"
     );
   };
 
-  var themeObj = /*#__PURE__*/Object.freeze({
-    default: theme
+  var _themeObj = /*#__PURE__*/Object.freeze({
+    default: _transformElem
   });
 
   /* eslint no-void: "off" */
@@ -59,8 +59,60 @@
   		});
   	};
   };
+  //# sourceMappingURL=index.es2015.js.map
 
-  let transformElem = theme;
+  const camelHyphen = str => str.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`);
+
+  function jsx(el, attrs, ...children) {
+    const output = document.createElement(el);
+    if (el === "style" && typeof children[0] == "object") {
+      const iterray = Object.entries(children[0]);
+      let textCont = "";
+      for (let i = 0; i < iterray.length; i++) {
+        let [selKey, val] = iterray[i];
+        if (!Array.isArray(val)) val = [val];
+        val = val.map(cur => Object.entries(cur));
+        textCont += val.reduce(
+          (str, cur) =>
+            `${str}${selKey} {\n${cur.reduce((str, [key, val]) => {
+            if (typeof val === "object") {
+              let newSel = selKey + (key.startsWith("&") ? key : " " + key);
+              iterray.push([newSel, val]);
+              return str;
+            }
+            return `${str}  ${camelHyphen(key)}: ${val};\n`;
+          }, "")}}\n`,
+          ""
+        );
+      }
+      output.textContent = textCont;
+    }
+    for (let [name, value] of Object.entries(attrs || {})) {
+      let set = true;
+      if (name === "style" && typeof value === "object") {
+        set = false;
+
+        Object.assign(
+          output.style,
+          Object.entries(value)
+            .map(cur => {
+              cur[0] = camelHyphen(cur[0]);
+              return cur;
+            })
+            .reduce((obj, [k, v]) => ({ ...obj, [k]: v }), {})
+        );
+      }
+      if (name.match("data-.+") && typeof value == "object") {
+        value = JSON.stringify(object);
+      }
+      if (set) output.setAttribute(name, value);
+    }
+    children.forEach(cur => output.append(...[].concat(cur)));
+    return output;
+  }
+
+  let themeObj = _themeObj;
+  let transformElem = _transformElem;
 
   /**
    * Get an array of functions to reduce on
@@ -143,11 +195,7 @@
           canvas: () => {
             let { interval } = userElem;
             const updateCanvas = () =>
-              userElem.process(
-                evtElem[0].getContext("2d"),
-                this.scope,
-                evtElem[0]
-              );
+              userElem.draw(evtElem[0].getContext("2d"), this.scope, evtElem[0]);
             const obj = {
               updateCanvas,
               onUpdate: true
@@ -206,6 +254,11 @@
               fileDisplay.innerText = file.name;
               scope[userElem.name] = funcReduce(funcs, file.slice());
             }
+          },
+          button: () => {
+            evtElem[0].addEventListener("click", () =>
+              userElem.handler(dom.scope)
+            );
           }
         };
         if (userElem.type in handle) handle[userElem.type]();
@@ -271,11 +324,23 @@
     }),
     /**
      * Set a custom element output for the elements
-     * @param {Function} func
+     * @param {Function} stl
      */
-    style(func) {
-      if (typeof func === "function") transformElem = func;
-      else throw new Error();
+    style(stl) {
+      if (typeof stl === "function") transformElem = stl;
+      else if (typeof stl === "object") {
+        themeObj = stl;
+        transformElem = stl.transformElem;
+      } else throw new Error();
+    },
+    loadStyleSheet() {
+      let style = "styleUrl";
+      if (!(style in themeObj)) return;
+      style = [].concat(themeObj[style]);
+      style.forEach(cur =>
+        document.head.appendChild(jsx('link', {rel: "stylesheet", href: cur}))
+      );
+      return this;
     }
   };
 

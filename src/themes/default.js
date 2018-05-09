@@ -1,9 +1,5 @@
 import jsx from "./jsx-factory";
 
-/* @legume @preserve
- * @style ./default.css
- */
-
 export default elem =>
   ({
     title: () => <h1 class="io-title">{elem.text}</h1>,
@@ -84,3 +80,8 @@ export default elem =>
   }[elem.type]());
 
 export const root = <div />;
+
+export const styleUrl = [
+  "./default.css",
+  "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css"
+];
