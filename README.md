@@ -11,7 +11,7 @@ could be contained in a single HTML file:
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel=stylesheet href=https://cdn.jsdeliver.net/npm/primer@10.4.0/build/build.css>
+  <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/primer@10.4.0/build/build.css>
   <title>stdio App</title>
   <script src="https://cdn.jsdelivr.net/npm/stdio.js/build/stdio-primer.min.js"></script>
   <script>
