@@ -59,7 +59,6 @@
   		});
   	};
   };
-  //# sourceMappingURL=index.es2015.js.map
 
   const camelHyphen = str => str.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`);
 

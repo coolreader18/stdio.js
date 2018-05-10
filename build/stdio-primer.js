@@ -241,7 +241,6 @@
   		});
   	};
   };
-  //# sourceMappingURL=index.es2015.js.map
 
   let themeObj = _themeObj;
   let transformElem = _transformElem;
