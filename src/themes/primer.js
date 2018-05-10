@@ -119,7 +119,11 @@ export default elem =>
     }),
     button: () => ({
       elem: (
-        <div class="m-2">
+        <div
+          style={{
+            padding: "10px 0"
+          }}
+        >
           <button class="btn">{elem.label || elem.name}</button>
         </div>
       ),

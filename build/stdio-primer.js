@@ -178,7 +178,11 @@
       }),
       button: () => ({
         elem: (
-          jsx('div', {class: "m-2"},
+          jsx('div', {
+            style: {
+              padding: "10px 0"
+            }
+          },
             jsx('button', {class: "btn"}, elem.label || elem.name)
           )
         ),
