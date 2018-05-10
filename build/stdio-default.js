@@ -135,6 +135,14 @@
         fileDragTo: null,
         fileDisplay: "span",
         fileButton: "button"
+      }),
+      button: () => ({
+        elem: (
+          jsx('div', {class: "io-button-wrapper"},
+            jsx('button', {class: "io-button"})
+          )
+        ),
+        evt: "button"
       })
     }[elem.type]());
 

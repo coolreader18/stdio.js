@@ -76,6 +76,14 @@ export default elem =>
       fileDragTo: null,
       fileDisplay: "span",
       fileButton: "button"
+    }),
+    button: () => ({
+      elem: (
+        <div class="io-button-wrapper">
+          <button class="io-button" />
+        </div>
+      ),
+      evt: "button"
     })
   }[elem.type]());
 
