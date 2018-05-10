@@ -1,6 +1,6 @@
 /* @legume
  * @name test
- * @require ./build/stdio-primer.js as stdio
+ * @require ./build/stdio-default.js as stdio
  */
 
 // So that there's no jittering when changing the text and awaiting createImageBitmap
@@ -48,7 +48,7 @@ stdio
     },
     {
       type: "canvas",
-      process: async (ctx, { tocanvas, file }, canvas) => {
+      draw: async (ctx, { tocanvas, file }, canvas) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillText(tocanvas, 10, 10);
         if (file !== oldFile) {

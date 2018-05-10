@@ -76,12 +76,21 @@ export default elem =>
       fileDragTo: null,
       fileDisplay: "span",
       fileButton: "button"
+    }),
+    button: () => ({
+      elem: (
+        <div class="io-button-wrapper">
+          <button class="io-button">{elem.label || elem.name}</button>
+        </div>
+      ),
+      evt: "button"
     })
   }[elem.type]());
 
 export const root = <div />;
 
 export const styleUrl = [
+  "./build/default.css",
   "./default.css",
   "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css"
 ];
