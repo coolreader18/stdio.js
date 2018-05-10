@@ -148,11 +148,10 @@
 
   const root$1 = jsx('div');
 
-  const styleUrl = [
-    "./build/default.css",
-    "./default.css",
-    "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css"
-  ];
+  const styleUrl = testing =>
+    testing
+      ? "./build/default.css"
+      : "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css";
 
   var _themeObj = /*#__PURE__*/Object.freeze({
     default: _transformElem,
@@ -204,6 +203,7 @@
 
   let themeObj = _themeObj;
   let transformElem = _transformElem;
+  let testing = false;
 
   /**
    * Get an array of functions to reduce on
@@ -425,15 +425,25 @@
       } else throw new Error();
     },
     loadStyleSheet() {
-      let style = "styleUrl";
-      if (!(style in themeObj)) return;
-      style = [].concat(themeObj[style]);
+      const { styleUrl: styleUrl$$1 } = themeObj;
+      let style;
+      if (!styleUrl$$1) return;
+      if (typeof styleUrl$$1 === "function") style = styleUrl$$1(testing);
+      style = [].concat(style);
       style.forEach(cur =>
         document.head.appendChild(jsx('link', {rel: "stylesheet", href: cur}))
       );
       return this;
     }
   };
+
+  Object.defineProperty(stdio, "testing", {
+    value: () => {
+      testing = true;
+      return stdio;
+    },
+    enumerable: false
+  });
 
   return stdio;
 

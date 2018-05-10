@@ -89,8 +89,7 @@ export default elem =>
 
 export const root = <div />;
 
-export const styleUrl = [
-  "./build/default.css",
-  "./default.css",
-  "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css"
-];
+export const styleUrl = testing =>
+  testing
+    ? "./build/default.css"
+    : "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css";

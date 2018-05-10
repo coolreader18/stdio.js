@@ -7,6 +7,7 @@
 let oldFile, bitmap;
 
 stdio
+  .testing()
   .loadStyleSheet()
   .title("stdio.js")
   .add(

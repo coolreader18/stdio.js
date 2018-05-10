@@ -3,6 +3,7 @@ import DOMready from "when-dom-ready";
 import jsx from "./themes/jsx-factory";
 let themeObj = _themeObj;
 let transformElem = _transformElem;
+let testing = false;
 
 /**
  * Get an array of functions to reduce on
@@ -224,14 +225,24 @@ const stdio = {
     } else throw new Error();
   },
   loadStyleSheet() {
-    let style = "styleUrl";
-    if (!(style in themeObj)) return;
-    style = [].concat(themeObj[style]);
+    const { styleUrl } = themeObj;
+    let style;
+    if (!styleUrl) return;
+    if (typeof styleUrl === "function") style = styleUrl(testing);
+    style = [].concat(style);
     style.forEach(cur =>
       document.head.appendChild(<link rel="stylesheet" href={cur} />)
     );
     return this;
   }
 };
+
+Object.defineProperty(stdio, "testing", {
+  value: () => {
+    testing = true;
+    return stdio;
+  },
+  enumerable: false
+});
 
 export default stdio;

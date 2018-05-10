@@ -113,6 +113,7 @@
 
   let themeObj = _themeObj;
   let transformElem = _transformElem;
+  let testing = false;
 
   /**
    * Get an array of functions to reduce on
@@ -334,15 +335,25 @@
       } else throw new Error();
     },
     loadStyleSheet() {
-      let style = "styleUrl";
-      if (!(style in themeObj)) return;
-      style = [].concat(themeObj[style]);
+      const { styleUrl } = themeObj;
+      let style;
+      if (!styleUrl) return;
+      if (typeof styleUrl === "function") style = styleUrl(testing);
+      style = [].concat(style);
       style.forEach(cur =>
         document.head.appendChild(jsx('link', {rel: "stylesheet", href: cur}))
       );
       return this;
     }
   };
+
+  Object.defineProperty(stdio, "testing", {
+    value: () => {
+      testing = true;
+      return stdio;
+    },
+    enumerable: false
+  });
 
   return stdio;
 
