@@ -135,12 +135,21 @@
         fileDragTo: null,
         fileDisplay: "span",
         fileButton: "button"
+      }),
+      button: () => ({
+        elem: (
+          jsx('div', {class: "io-button-wrapper"},
+            jsx('button', {class: "io-button"}, elem.label || elem.name)
+          )
+        ),
+        evt: "button"
       })
     }[elem.type]());
 
   const root$1 = jsx('div');
 
   const styleUrl = [
+    "./build/default.css",
     "./default.css",
     "https://cdn.jsdelivr.net/npm/stdio.js/build/default.css"
   ];
