@@ -96,7 +96,10 @@ const dom = Object.assign([], {
             obj.onUpdate = false;
             obj.interval = setInterval(handler, interval);
           }
-          if (name) listeners[name] = scope[name] = obj;
+          if (name) {
+            listeners[name] = obj;
+            scope[name] = obj[canvas];
+          }
           outputs.canvas.push(obj);
         },
         file: () => {
