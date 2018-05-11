@@ -1,6 +1,6 @@
 /* @legume
  * @name test
- * @require ./build/stdio-default.js as stdio
+ * @require ./build/stdio-primer.js as stdio
  */
 
 // So that there's no jittering when changing the text and awaiting createImageBitmap
@@ -59,5 +59,7 @@ stdio
         ctx.drawImage(bitmap, 20, 20);
       }
     },
-    { type: "button", label: "click", handler: () => alert("hey") }
+    { type: "button", label: "click", handler: () => alert("hey"), name: "btn" }
   );
+
+window.stdio = stdio;
