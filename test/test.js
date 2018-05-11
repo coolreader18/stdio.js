@@ -49,14 +49,15 @@ stdio
     },
     {
       type: "canvas",
+      name: "canv",
       draw: async (ctx, { tocanvas, file }, canvas) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillText(tocanvas, 10, 10);
-        if (file !== oldFile) {
+        if (file !== oldFile && file) {
           bitmap = await createImageBitmap(file);
           oldFile = file;
         }
-        ctx.drawImage(bitmap, 20, 20);
+        if (bitmap) ctx.drawImage(bitmap, 20, 20);
       }
     },
     { type: "button", label: "click", handler: () => alert("hey"), name: "btn" }
