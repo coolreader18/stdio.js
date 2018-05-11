@@ -265,7 +265,7 @@
      */
     refresh() {
       if (!isDOMReady) return;
-      const { root, scope, outputs, title, listeners } = this;
+      const { root, scope, outputs, title, listeners } = dom;
       const df = document.createDocumentFragment();
       if (title)
         df.appendChild(
@@ -292,30 +292,30 @@
         const handle = {
           textInput: () => {
             let input = evtElem[0];
-            scope[name] = "";
-            input.addEventListener("input", ({ target: { value } }) => {
-              scope[name] = funcReduce(funcs, value);
-            });
+            if (name) {
+              scope[name] = "";
+              input.addEventListener("input", ({ target: { value } }) => {
+                scope[name] = funcReduce(funcs, value);
+              });
+            }
           },
           checkbox: () => {
             evtElem.forEach(cur =>
-              cur.addEventListener(
-                "change",
-                () =>
-                  (scope[name] = Array.from(evtElem).reduce(
+              cur.addEventListener("change", () => {
+                if (name)
+                  scope[name] = Array.from(evtElem).reduce(
                     (arr, cur) =>
                       arr.concat(cur.checked ? cur.dataset.value : []),
                     []
-                  ))
-              )
+                  );
+              })
             );
           },
           radio: () => {
             evtElem.forEach(cur =>
-              cur.addEventListener(
-                "change",
-                () => (scope[name] = cur.dataset.value)
-              )
+              cur.addEventListener("change", () => {
+                if (name) scope[name] = cur.dataset.value;
+              })
             );
           },
           output: () => {
@@ -337,7 +337,8 @@
               obj.onUpdate = false;
               obj.interval = setInterval(handler, interval);
             }
-            outputs.canvas.push((listeners[name] = obj));
+            if (name) listeners[name] = scope[name] = obj;
+            outputs.canvas.push(obj);
           },
           file: () => {
             let { fileDisplay, fileButton, fileDragTo } = themeElem;
@@ -384,7 +385,7 @@
             function haveFile(file) {
               if (!file) return;
               fileDisplay.innerText = file.name;
-              scope[name] = funcReduce(funcs, file.slice());
+              if (name) scope[name] = funcReduce(funcs, file.slice());
             }
           },
           button: () => {
