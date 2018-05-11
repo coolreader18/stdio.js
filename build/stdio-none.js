@@ -193,19 +193,19 @@
             });
           },
           canvas: () => {
-            let { interval } = userElem;
-            const updateCanvas = () =>
-              userElem.draw(evtElem[0].getContext("2d"), this.scope, evtElem[0]);
+            let { interval, draw } = userElem;
             const obj = {
-              updateCanvas,
-              onUpdate: true
+              type: "canvas",
+              canvas: evtElem[0],
+              onUpdate: true,
+              handler: draw
             };
-            if (interval === void 0) interval = "update";
+            if (interval == null) interval = "update";
             if (typeof interval === "number") {
               obj.onUpdate = false;
-              obj.interval = setInterval(updateCanvas, interval);
+              obj.interval = setInterval(handler, interval);
             }
-            outputs.canvas.push(obj);
+            outputs.canvas.push((listeners[name] = obj));
           },
           file: () => {
             let { fileDisplay, fileButton, fileDragTo } = themeElem;
@@ -273,16 +273,16 @@
         ({ elem, transform }) =>
           (elem.innerHTML = funcReduce(funcArr(transform), this.scope[input]))
       );
-      canvas.forEach(cur => {
-        if (cur.onUpdate) cur.updateCanvas();
-      });
+      canvas.forEach(cur => cur.onUpdate && this.trigger(cur));
     },
     trigger(target) {
       if (typeof target === "string") target = this.listeners[target];
       const { handler } = target;
       ({
-        button: () => handler(this.scope)
-      }[target.type]());
+        button: () => handler(this.scope),
+        canvas: ({ canvas }) =>
+          handler(canvas.getContext("2d"), this.scope, canvas)
+      }[target.type](target));
     },
     outputs: createOutputs(),
     listeners: {},
