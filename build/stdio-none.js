@@ -133,7 +133,7 @@
      */
     refresh() {
       if (!isDOMReady) return;
-      const { root, scope, outputs, title } = this;
+      const { root, scope, outputs, title, listeners } = this;
       const df = document.createDocumentFragment();
       if (title)
         df.appendChild(
@@ -146,6 +146,7 @@
           )
         );
       this.forEach(userElem => {
+        const { name } = userElem;
         let themeElem = transformElem(userElem, dom);
         const funcs = funcArr(userElem.transform);
         if (themeElem instanceof HTMLElement || Array.isArray(themeElem)) {
@@ -159,9 +160,9 @@
         const handle = {
           textInput: () => {
             let input = evtElem[0];
-            scope[userElem.name] = "";
+            scope[name] = "";
             input.addEventListener("input", ({ target: { value } }) => {
-              scope[userElem.name] = funcReduce(funcs, value);
+              scope[name] = funcReduce(funcs, value);
             });
           },
           checkbox: () => {
@@ -169,7 +170,7 @@
               cur.addEventListener(
                 "change",
                 () =>
-                  (scope[userElem.name] = Array.from(evtElem).reduce(
+                  (scope[name] = Array.from(evtElem).reduce(
                     (arr, cur) =>
                       arr.concat(cur.checked ? cur.dataset.value : []),
                     []
@@ -181,7 +182,7 @@
             evtElem.forEach(cur =>
               cur.addEventListener(
                 "change",
-                () => (scope[userElem.name] = cur.dataset.value)
+                () => (scope[name] = cur.dataset.value)
               )
             );
           },
@@ -251,13 +252,13 @@
             function haveFile(file) {
               if (!file) return;
               fileDisplay.innerText = file.name;
-              scope[userElem.name] = funcReduce(funcs, file.slice());
+              scope[name] = funcReduce(funcs, file.slice());
             }
           },
           button: () => {
-            evtElem[0].addEventListener("click", () =>
-              userElem.handler(dom.scope)
-            );
+            const listener = { type: "button", handler: userElem.handler };
+            evtElem[0].addEventListener("click", () => this.trigger(listener));
+            if (name) this.listeners[name] = listener;
           }
         };
         if (userElem.type in handle) handle[userElem.type]();
@@ -276,7 +277,15 @@
         if (cur.onUpdate) cur.updateCanvas();
       });
     },
+    trigger(target) {
+      if (typeof target === "string") target = this.listeners[target];
+      const { handler } = target;
+      ({
+        button: () => handler(this.scope)
+      }[target.type]());
+    },
     outputs: createOutputs(),
+    listeners: {},
     scope: new Proxy(
       {},
       {
@@ -333,9 +342,10 @@
       } else throw new Error();
     },
     loadStyleSheet() {
-      let style = "styleUrl";
-      if (!(style in themeObj)) return;
-      style = [].concat(themeObj[style]);
+      let { styleUrl: style } = themeObj;
+      if (!style) return;
+      if (typeof style === "function") style = style(testing);
+      style = [].concat(style);
       style.forEach(cur =>
         document.head.appendChild(jsx('link', {rel: "stylesheet", href: cur}))
       );
