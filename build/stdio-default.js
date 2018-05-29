@@ -110,8 +110,10 @@
         evt: "input"
       }),
       output: () => jsx('output', {class: "io-output"}),
-      heading: () =>
-        jsx(`h${elem.size || 1}`, { class: "io-heading" }, elem.text),
+      heading: () => {
+        const H = `h${elem.size}`;
+        return H({class: "io-heading"}, elem.text);
+      },
       text: () => jsx('p', {class: "io-text"}, elem.text),
       canvas: () => ({
         elem: (
@@ -296,7 +298,10 @@
               obj.onUpdate = false;
               obj.interval = setInterval(handler, interval);
             }
-            if (name) listeners[name] = scope[name] = obj;
+            if (name) {
+              listeners[name] = obj;
+              scope[name] = obj[canvas];
+            }
             outputs.canvas.push(obj);
           },
           file: () => {

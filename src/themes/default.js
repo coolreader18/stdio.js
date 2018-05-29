@@ -51,8 +51,10 @@ export default elem =>
       evt: "input"
     }),
     output: () => <output class="io-output" />,
-    heading: () =>
-      jsx(`h${elem.size || 1}`, { class: "io-heading" }, elem.text),
+    heading: () => {
+      const H = `h${elem.size}`;
+      return <H class="io-heading">{elem.text}</H>;
+    },
     text: () => <p class="io-text">{elem.text}</p>,
     canvas: () => ({
       elem: (
