@@ -42,6 +42,7 @@ export default function jsx(el, attrs, ...children) {
     if (name.match("data-.+") && typeof value == "object") {
       value = JSON.stringify(object);
     }
+    if (typeof value === "boolean" && !value) set = false;
     if (set) output.setAttribute(name, value);
   }
   children.forEach(cur => output.append(...[].concat(cur)));

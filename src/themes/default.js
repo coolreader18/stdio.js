@@ -86,6 +86,16 @@ export default elem =>
         </div>
       ),
       evt: "button"
+    }),
+    switch: () => ({
+      elem: (
+        <div class="io-switch-wrapper">
+          <label class="io-switch-label">
+            {elem.label || elem.name}
+            <input type="checkbox" class="io-switch" />
+          </label>
+        </div>
+      )
     })
   }[elem.type]());
 

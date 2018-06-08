@@ -53,13 +53,14 @@
       if (name.match("data-.+") && typeof value == "object") {
         value = JSON.stringify(object);
       }
+      if (typeof value === "boolean" && !value) set = false;
       if (set) output.setAttribute(name, value);
     }
     children.forEach(cur => output.append(...[].concat(cur)));
     return output;
   }
 
-  var _transformElem = elem =>
+  var _default = elem =>
     ({
       title: () => jsx('h1', {class: "io-title"}, elem.text),
       textInput: () => (
@@ -145,6 +146,16 @@
           )
         ),
         evt: "button"
+      }),
+      switch: () => ({
+        elem: (
+          jsx('div', {class: "io-switch-wrapper"},
+            jsx('label', {class: "io-switch-label"},
+              elem.label || elem.name,
+              jsx('input', {type: "checkbox", class: "io-switch"})
+            )
+          )
+        )
       })
     }[elem.type]());
 
@@ -157,7 +168,7 @@
   ];
 
   var _themeObj = /*#__PURE__*/Object.freeze({
-    default: _transformElem,
+    default: _default,
     root: root$1,
     styleUrl: styleUrl
   });
@@ -202,9 +213,10 @@
   		});
   	};
   };
+  //# sourceMappingURL=index.es2015.js.map
 
-  let themeObj = _themeObj;
-  let transformElem = _transformElem;
+  let transformElem,
+    themeObj = ({ default: transformElem } = _themeObj);
 
   /**
    * Get an array of functions to reduce on
@@ -212,15 +224,29 @@
    */
   const funcArr = func => (func ? (Array.isArray(func) ? func : [func]) : []);
   const funcReduce = (funcs, val) => funcs.reduce((agr, cur) => cur(agr), val);
-  const addToNullArr = (obj, arr, elem) => {
-    if (obj[arr]) obj[arr].push(elem);
-    else obj[arr] = [elem];
-  };
-  const createOutputs = () => ({ output: {}, canvas: [] });
+  const createOutputs = () => ({ output: [], canvas: [] });
 
   let isDOMReady = false;
 
-  const dom = Object.assign([], {
+  class StdioDom extends Array {
+    constructor(...elems) {
+      super(...elems);
+      Object.assign(this, {
+        outputs: createOutputs(),
+        listeners: {},
+        scope: new Proxy(
+          {},
+          {
+            set(obj, prop, val) {
+              obj[prop] = val;
+              dom.update(prop);
+              return true;
+            }
+          }
+        ),
+        root: document.body
+      });
+    }
     /**
      * Refresh the virtual DOM onto the document
      */
@@ -255,8 +281,8 @@
             let input = evtElem[0];
             if (name) {
               scope[name] = "";
-              input.addEventListener("input", ({ target: { value } }) => {
-                scope[name] = funcReduce(funcs, value);
+              input.addEventListener("input", e => {
+                scope[name] = funcReduce(funcs, e.currentTarget.value);
               });
             }
           },
@@ -280,9 +306,9 @@
             );
           },
           output: () => {
-            addToNullArr(outputs.output, userElem.link, {
+            outputs.output.push({
               elem: evtElem[0],
-              tranform: userElem.transform
+              transform: userElem.transform
             });
           },
           canvas: () => {
@@ -300,7 +326,7 @@
             }
             if (name) {
               listeners[name] = obj;
-              scope[name] = obj[canvas];
+              scope[name] = obj.canvas;
             }
             outputs.canvas.push(obj);
           },
@@ -356,6 +382,14 @@
             const listener = { type: "button", handler: userElem.handler };
             evtElem[0].addEventListener("click", () => this.trigger(listener));
             if (name) this.listeners[name] = listener;
+          },
+          switch: () => {
+            evtElem[0].addEventListener(
+              "change",
+              ({ currentTarget: { checked } }) => {
+                scope[name] = checked;
+              }
+            );
           }
         };
         if (userElem.type in handle) handle[userElem.type]();
@@ -363,15 +397,23 @@
       });
       while (root.firstChild) root.removeChild(root.firstChild);
       this.root.appendChild(df);
-    },
+    }
     update(input) {
       const { output, canvas } = this.outputs;
-      (output[input] || []).forEach(
-        ({ elem, transform }) =>
-          (elem.innerHTML = funcReduce(funcArr(transform), this.scope[input]))
-      );
+      output.forEach(({ elem, transform }) => {
+        elem.textContent = funcReduce(
+          funcArr(transform).map(cur => {
+            if (typeof cur === "string") {
+              const name = cur;
+              cur = scope => scope[name];
+            }
+            return cur;
+          }),
+          this.scope
+        );
+      });
       canvas.forEach(cur => cur.onUpdate && this.trigger(cur));
-    },
+    }
     trigger(target) {
       if (typeof target === "string") target = this.listeners[target];
       const { handler } = target;
@@ -380,31 +422,18 @@
         canvas: ({ canvas }) =>
           handler(canvas.getContext("2d"), this.scope, canvas)
       }[target.type](target));
-    },
-    outputs: createOutputs(),
-    listeners: {},
-    scope: new Proxy(
-      {},
-      {
-        set(obj, prop, val) {
-          obj[prop] = val;
-          dom.update(prop);
-          return true;
-        }
-      }
-    ),
-    root: document.body
-  });
+    }
+  }
+
+  const dom = new StdioDom();
   whenDomReady().then(() => {
     isDOMReady = true;
     dom.root = document.body;
-    const r = "root";
-    if (r in themeObj) {
-      dom.root = dom.root.appendChild(themeObj[r]);
+    if ("root" in themeObj) {
+      dom.root = dom.root.appendChild(themeObj.root);
       dom.refresh();
     }
-    const i = "init";
-    if (i in themeObj) themeObj[i](root);
+    if ("init" in themeObj) themeObj.init(root);
   });
 
   const stdio = {
@@ -413,18 +442,19 @@
      * @param {...stdio.Element} elems
      */
     add(...elems) {
-      elems.forEach(cur => dom.push(cur));
+      dom.splice(0, 0, ...elems);
       dom.refresh();
+      return this;
     },
     title(title) {
       this.dom.title = title;
       return this;
     },
     dom: new Proxy(dom, {
-      set(obj, prop, val) {
-        obj[prop] = val;
-        dom.refresh();
-        return true;
+      set(...args) {
+        const ret = Reflect.set(...args);
+        if (ret) dom.refresh();
+        return ret;
       }
     }),
     /**
@@ -434,9 +464,9 @@
     style(stl) {
       if (typeof stl === "function") transformElem = stl;
       else if (typeof stl === "object") {
-        themeObj = stl;
-        transformElem = stl.transformElem;
+        themeObj = { transformElem } = stl;
       } else throw new Error();
+      return this;
     },
     loadStyleSheet() {
       let { styleUrl: style } = themeObj;

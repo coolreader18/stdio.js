@@ -7,20 +7,23 @@ export default elem =>
         <div class="Subhead-heading">{elem.text}</div>
       </div>
     ),
-    textInput: () => (
-      <dl class="form-group">
-        <dt>
-          <label>{elem.label || elem.name}</label>
-        </dt>
-        <dd>
-          <input
-            type="text"
-            class="form-control"
-            placeholder={elem.placeholder || ""}
-          />
-        </dd>
-      </dl>
-    ),
+    textInput: () => ({
+      elem: (
+        <dl class="form-group">
+          <dt>
+            <label>{elem.label || elem.name}</label>
+          </dt>
+          <dd>
+            <input
+              type="text"
+              class="form-control"
+              placeholder={elem.placeholder || ""}
+            />
+          </dd>
+        </dl>
+      ),
+      evt: "input"
+    }),
     checkbox: type => ({
       elem: (
         <dl>
@@ -128,6 +131,19 @@ export default elem =>
         </div>
       ),
       evt: "button"
+    }),
+    switch: () => ({
+      elem: (
+        <dl>
+          <dt>
+            <label>{elem.label || elem.name}</label>
+          </dt>
+          <dd style={{ marginTop: "5px" }}>
+            <input type="checkbox" checked={!!elem.default} />
+          </dd>
+        </dl>
+      ),
+      evt: "input"
     })
   }[elem.type]());
 
