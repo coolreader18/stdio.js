@@ -1,6 +1,6 @@
 {
   "name": "stdio.js",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A simple framework to create simple input/output functions.",
   "main": "src/index.js",
   "jsdelivr": "build/stdio.min.js",
