@@ -1,25 +1,25 @@
-import jsx from "./jsx-factory";
+import React from "react";
 
 export default elem =>
   ({
-    title: () => <h1 class="io-title">{elem.text}</h1>,
+    title: () => <h1 className="io-title">{elem.text}</h1>,
     textInput: () => (
-      <label class="io-input-label">
+      <label className="io-input-label">
         {elem.label || elem.name}:
-        <input type="text" class="io-input" />
+        <input type="text" className="io-input" />
       </label>
     ),
     checkbox: () => ({
       elem: (
-        <div class="io-checkbox-wrapper">
+        <div className="io-checkbox-wrapper">
           {elem.options.map(cur => {
             if (typeof cur === "string") cur = { val: cur };
             return (
-              <label class="io-checkbox-label">
+              <label className="io-checkbox-label">
                 {cur.label || cur.val}:
                 <input
                   type="checkbox"
-                  class="io-checkbox"
+                  className="io-checkbox"
                   data-value={cur.val}
                 />
               </label>
@@ -31,15 +31,15 @@ export default elem =>
     }),
     radio: () => ({
       elem: (
-        <div class="io-radio-wrapper">
+        <div className="io-radio-wrapper">
           {elem.options.map(cur => {
             if (typeof cur === "string") cur = { val: cur };
             return (
-              <label class="io-radio-label">
+              <label className="io-radio-label">
                 {cur.label || cur.val}:
                 <input
                   type="radio"
-                  class="io-radio"
+                  className="io-radio"
                   name={elem.name}
                   data-value={cur.val}
                 />
@@ -50,19 +50,19 @@ export default elem =>
       ),
       evt: "input"
     }),
-    output: () => <output class="io-output" />,
+    output: () => <output className="io-output" />,
     heading: () => {
       const H = `h${elem.size}`;
-      return <H class="io-heading">{elem.text}</H>;
+      return <H className="io-heading">{elem.text}</H>;
     },
-    text: () => <p class="io-text">{elem.text}</p>,
+    text: () => <p className="io-text">{elem.text}</p>,
     canvas: () => ({
       elem: (
-        <div class="io-canvas-wrapper">
+        <div className="io-canvas-wrapper">
           <canvas
             width={elem.width || ""}
             height={elem.height || ""}
-            class="io-canvas"
+            className="io-canvas"
           />
         </div>
       ),
@@ -70,9 +70,9 @@ export default elem =>
     }),
     file: () => ({
       elem: (
-        <div class="io-file-wrapper">
-          <button class="io-file-button">Choose file</button>
-          <span class="io-file-display" />
+        <div className="io-file-wrapper">
+          <button className="io-file-button">Choose file</button>
+          <span className="io-file-display" />
         </div>
       ),
       fileDragTo: null,
@@ -81,18 +81,18 @@ export default elem =>
     }),
     button: () => ({
       elem: (
-        <div class="io-button-wrapper">
-          <button class="io-button">{elem.label || elem.name}</button>
+        <div className="io-button-wrapper">
+          <button className="io-button">{elem.label || elem.name}</button>
         </div>
       ),
       evt: "button"
     }),
     switch: () => ({
       elem: (
-        <div class="io-switch-wrapper">
-          <label class="io-switch-label">
+        <div className="io-switch-wrapper">
+          <label className="io-switch-label">
             {elem.label || elem.name}
-            <input type="checkbox" class="io-switch" />
+            <input type="checkbox" className="io-switch" />
           </label>
         </div>
       )

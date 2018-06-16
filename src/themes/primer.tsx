@@ -1,22 +1,22 @@
-import jsx from "./jsx-factory";
+import React from "react";
 
 export default elem =>
   ({
     title: () => (
-      <div class="Subhead">
-        <div class="Subhead-heading">{elem.text}</div>
+      <div className="Subhead">
+        <div className="Subhead-heading">{elem.text}</div>
       </div>
     ),
     textInput: () => ({
       elem: (
-        <dl class="form-group">
+        <dl className="form-group">
           <dt>
             <label>{elem.label || elem.name}</label>
           </dt>
           <dd>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               placeholder={elem.placeholder || ""}
             />
           </dd>
@@ -34,7 +34,7 @@ export default elem =>
             {elem.options.map(cur => {
               if (typeof cur === "string") cur = { val: cur };
               return (
-                <div class="form-checkbox">
+                <div className="form-checkbox">
                   <label>
                     <input type="checkbox" data-value={cur.val} />
                     {cur.label || cur.val}
@@ -57,8 +57,8 @@ export default elem =>
             {elem.options.map(cur => {
               if (typeof cur === "string") cur = { val: cur };
               return (
-                <div class="form-checkbox">
-                  <label class="">
+                <div className="form-checkbox">
+                  <label className="">
                     <input type="radio" name={elem.name} data-value={cur.val} />
                     {cur.label || cur.val}
                   </label>
@@ -81,17 +81,17 @@ export default elem =>
             marginBottom: "20px"
           }}
         >
-          <output class="Box p-2 hover-grow" />
+          <output className="Box p-2 hover-grow" />
         </div>
       ),
       evt: "output"
     }),
-    heading: () => <h1 class={"h" + elem.size}>{elem.text}</h1>,
-    text: () => <p class="io-text">{elem.text}</p>,
+    heading: () => <h1 className={"h" + elem.size}>{elem.text}</h1>,
+    text: () => <p className="io-text">{elem.text}</p>,
     canvas: () => ({
       elem: (
         <div
-          class="Box p-2"
+          className="Box p-2"
           style={{
             width: "fit-content",
             height: "fit-content"
@@ -104,14 +104,14 @@ export default elem =>
     }),
     file: () => ({
       elem: (
-        <dl class="form-group">
+        <dl className="form-group">
           <dt>
             <label>{elem.label || elem.name}</label>
           </dt>
           <dd>
-            <div class="form-control">
-              <button class="btn">Choose file</button>
-              <span class="m-2" />
+            <div className="form-control">
+              <button className="btn">Choose file</button>
+              <span className="m-2" />
             </div>
           </dd>
         </dl>
@@ -127,7 +127,7 @@ export default elem =>
             padding: "10px 0"
           }}
         >
-          <button class="btn">{elem.label || elem.name}</button>
+          <button className="btn">{elem.label || elem.name}</button>
         </div>
       ),
       evt: "button"
@@ -147,7 +147,7 @@ export default elem =>
     })
   }[elem.type]());
 
-export const root = <div class="Box p-5 m-4" />;
+export const root = <div className="Box p-5 m-4" />;
 
 export const styleUrl =
   "https://cdn.jsdelivr.net/npm/primer@10.4.0/build/build.css";

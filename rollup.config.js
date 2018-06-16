@@ -11,7 +11,7 @@ const plugin = cur => ({
   name: "themeImporter",
   resolveId: (importee, importer) =>
     importer === index && importee === "./themes/default"
-      ? path.join(__dirname, "src/themes", cur + ".js")
+      ? path.join(__dirname, "src/themes", cur + ".tsx")
       : null
 });
 
@@ -29,11 +29,7 @@ export default themes.reduce((arr, cur) => {
  * @author coolreader18
  */`
     },
-    plugins: [
-      plugin(cur),
-      resolve(),
-      jsx({ factory: "jsx", arrayChildren: false })
-    ]
+    plugins: [plugin(cur), resolve()]
   };
   return arr.concat([
     cfg,
