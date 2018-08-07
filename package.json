@@ -18,7 +18,7 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-typescript2": "^0.15.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "serve": "^6.5.5",
+    "serve": "^9.4.0",
     "typescript": "^2.9.2"
   },
   "license": "MIT",
